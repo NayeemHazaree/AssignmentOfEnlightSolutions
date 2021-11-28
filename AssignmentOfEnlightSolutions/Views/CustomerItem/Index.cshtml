@@ -1,0 +1,156 @@
+﻿@model AssignmentOfEnlightSolutions_Models.Models.CustomerItem
+<div class="mb-5">
+    <h1 class="text-center bg-secondary text-white">Sales Create</h1>
+    <div class="container col-12">
+        <h2 class="text-primary bg-light">Sales Header</h2>
+        <div class="row pt-4">
+        <div class="col-2">
+            <label>Customer Name</label>
+        </div>
+        <div class="col-4">
+            <input class="form-control"/>
+        </div>
+    </div>
+    <div class="row pt-4">
+        <div class="col-2">
+            <label>Customer Phone</label>
+        </div>
+        <div class="col-4">
+            <input class="form-control"/>
+        </div>
+    </div>
+    <div class="row pt-4">
+        <div class="col-2">
+            <label>Customer Address</label>
+        </div>
+        <div class="col-4">
+            <input class="form-control"/>
+        </div>
+    </div>
+    </div>
+    <br />
+    <div class="container col-12">
+        <h2 class="text-primary bg-light">Sales Items</h2>
+        <div class="form-group row">
+            <div class="col-12">
+                <div class="col-12">
+                    <table class="table table-bordered table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center">
+                                    Select Item
+                                </th>
+                                <th style="display:none">
+                                    Item Name
+                                </th>
+                                <th style="text-align:center">
+                                    Item Price
+                                </th>
+                                <th width="20%" style="text-align:center">Quantity</th>
+                                <th style="text-align:center">Total Price</th>
+                                <th style="text-align:center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <select asp-for="ItemId" id="item" asp-items="@ViewBag.ItemDropDown" class="form-control font-weight-bold">
+                                        <option class="text-center" disabled selected>--Select Items--</option>
+                                    </select>
+                                    <span asp-validation-for="ItemId" class="text-danger"></span>
+                                </td>
+
+
+                                <td class="text-center">
+                                    <input class="form-control" disabled id="price" />
+                                </td>
+
+                                <td>
+                                    <input type="number" class="form-control" id="quantity" onchange="Calculate()" />
+                                </td>
+
+                                <td hidden>
+                                    <input class="form-control" id="itemName" />
+                                </td>
+
+                                <td>
+                                    <input class="form-control" disabled id="totalPrice" />
+                                </td>
+
+                                <td width="5%"><button type="button" class="btn btn-success" id="additems" style="text-align:center"><i class="fas fa-plus-circle"></i></button></td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                    <div>
+                        <table class="table table-striped mt-3 mb-0" id="addeditemlist">
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="text-primary bg-light">Sales Summary</h2>
+        <div class="form-group row">
+            <div class="col-12">
+                <div class="float-right">
+                    Total Price <input  disabled type="text" id="tp" />
+                </div>
+            </div>
+            <hr />
+            <div class="col-12">
+                <div class="float-right">
+                    Paid <input type="number" id="paid" />
+                </div>
+            </div>
+            <hr />
+            <div class="col-12">
+                <div class="float-right">
+                    Due <input disabled type="text" id="due"/>
+                </div>
+            </div>
+
+
+        </div>
+        <button class="btn alert-primary float-right">Create</button>
+    </div>
+</div>
+@section Scripts{
+<script src="~/js/main.js"></script>
+<script>
+
+    $(document).ready(function()
+    {
+        $("#item").change(function()
+        {
+            var itemId=$("#item").val();
+            $.ajax({
+                url:'@Url.Action("getPrice","CustomerItem")',
+                type:"GET",
+                data:{
+                    id:itemId
+                },
+                success:function(data)
+                {
+                    $("#price").val(data.price);
+                }
+            })
+        })
+    });
+
+
+
+    function Calculate() {
+      const x = document.getElementById("price").value;
+      const y = document.getElementById("quantity").value;
+      document.getElementById("totalPrice").value=(x*y);
+    }
+
+</script>
+
+}
